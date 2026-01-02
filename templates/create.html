@@ -1,0 +1,302 @@
+{% extends "layout.html" %}
+
+{% block title %}
+   Create deck 
+{% endblock %}
+
+{% block main %}
+        <div class="container-fluid bg-white text-start py-2">
+            <h3 class="py-3 text-start"> Create Card Deck </h3>
+        </div>
+        {% if request.method == 'GET' %}
+            <div class="container-fluid bg-white text-start py-2">
+                <h5 class="text-start"><span class="green">Step 1: </span>Select from Books in your <i class="green">vocab.db</i></h5>  
+                        
+                <div class="row align-items-center">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                    <p>Filter for book language: &nbsp;</p> 
+                    <select id="languageFilter" class="form-select form-select-sm w-auto mb-3">
+                        <option value="all">🌐 All</option>
+                        <option value="EN">🇬🇧 EN</option>
+                        <option value="DE">🇩🇪 DE</option>
+                        <option value="FR">🇫🇷 FR</option>
+                        <option value="ES">🇪🇸 ES</option>
+                        <option value="PT">🇵🇹 PT</option> 
+                    </select> 
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-md-end align-items-center">
+                    
+                    </div>
+                </div>
+                </div>
+
+            </div>
+            {% if books %}
+            <div class="table-responsive mt-4 bg-success-subtle py-2 px-2">
+                <table class="table table-rounded table-striped text-start align-middle">
+                    <thead class="table-success text-center">
+                        <tr>
+                            <th class="bg-success text-white" scope="col">Cover</th>
+                            <th class="bg-success text-white" scope="col">Language</th>
+                            <th class="bg-success text-white" scope="col">Authors</th>
+                            <th class="bg-success text-white" scope="col">Title</th>
+                            <th class="bg-success text-white" scope="col">Lookups</th>
+                            <th class="bg-success text-white" scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookTable" class="">
+                    {% for book in books %}
+                        <tr data-lang="{{ book.lang }}">
+                            <td class="cover-cell"><img src="{{ book.cover }}" alt="book cover for {{ book.title }}"  class="img-thumbnail" 
+                                style="width:150px; height:200px; object-fit:cover;">
+                            </td>
+                            <td class="text-uppercase">{{ book.lang | iconify_lang }} {{book.lang}}</td>
+                            <td>{{ book.authors or "—" }}</td>
+                            <td>{{ book.title }}</td>
+                            <td class="text-end">{{ book.num_lookups }}</td>
+                            <td class="button-cell">
+                                <form action="/create" method="post">
+                                    <input type="hidden" name="book_id" value="{{ book.id }}"> 
+                                    <input type="hidden" name="lang" value="{{ book.lang }}"> 
+                                    <input type="hidden" name="action" value="select_dict">
+                                    <button class="btn btn-sm btn-success" type="submit" style="width: 150px;">Create Deck</button>
+                                </form>
+                            {% if book.num_decks > 0 %}
+                                <a href="/history" target="_self">
+                                    <button class="btn btn-sm btn-primary mt-1" style="width: 150px;">Check History</button>
+                                </a>
+                                <!-- (you already have created <b class="green">{{ book.num_decks }}</b> deck(s) for this book, to download or delete check your <a href="/history"><b class="green">history</b></a>) -->
+                                <form action="/create" method="post">
+                                <input type="hidden" name="action" value="clear4asin"> 
+                                <input type="hidden" name="asin" value="{{ book.asin }}">
+                                <button class="btn btn-sm btn-danger my-1" type="submit" style="width: 150px;">
+                                    {% if book.num_decks == 1 %}
+                                        Delete 1 deck
+                                    {% else %}
+                                        Delete {{ book.num_decks }} decks
+                                    {% endif %}
+                                </button>
+                            </form>
+                                
+                            {% else %}
+                                {{ book.num_decks }} decks for book
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No books found.</p>
+            {% endif %} 
+        {% elif request.method == 'POST' %}
+            {% if dictionaries %}
+                <div class="container-fluid bg-white text-start py-2">
+                    <h5 class="text-start mb-3"><span class="green">Step 2: 
+                    </span>Select Online Dictionary for book language <b class="green">{{ book.lang | get_lang_name}}</b></h5>
+                    
+                    <div class="container py-5">
+                        <div class="row align-items-center">
+                            <!-- Image takes 4 cols on md+, full width on mobile -->
+                            <div class="col-12 col-md-2 mb-2 mb-md-0">
+                                <img src="{{ book.cover }}" class="img-fluid rounded shadow" alt="cover image"
+                                style="width:150px; height:200px; object-fit:cover;">
+                            </div>
+                                
+                            <!-- Text takes 8 cols on md+, full width on mobile -->
+                            <div class="col-12 col-md-10">
+                                <h5 class="mb-1">✅ Book chosen:</h5>
+                                <p class="mb-1"><b class="green">Title:</b> {{ book.title }}</p>
+                                <p class="mb-1"><b class="green">Author(s):</b> {{ book.authors }}</p>
+                                <p class="mb-1"><b class="green">Lookups: </b>{{ book.num_lookups }}</p>
+                            </div>
+                            
+                        </div>
+                    </div> 
+
+                    <div class="d-inline-block">
+                        <h5>Available Online Dictionaries:</h5>
+                        <p class="small">(i.e. online dictionaries for language {{ book.lang | get_lang_name}} that have been configured on this app for lookups and reponse parsing)</p>
+                    </div> 
+                    <div class="container-sm bg-secondary-subtle rounded border-success text-start py-2">
+                        <form method="post">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold"> </label>
+
+                                {% for d in dictionaries %}
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        name="dict_id"
+                                        id="dict_{{ d.id }}"
+                                        value="{{ d.id }}"
+                                        required >
+                                    <input type="hidden" name="book_id" value="{{ book.id }}">
+                                    <input type="hidden" name="action" value="select_card_type">
+                                    <label class="form-check-label" for="dict_{{ d.id }}">
+                                        <strong class="green">{{ d.name }}</strong>:
+                                        <span class="text-muted">
+                                            {{ d.desc | iconify_lang }}  (<a href="{{d.url}}" target="_blank">{{d.url}}</a>)
+                                        </span>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                                <button type="submit" class="btn btn-success">
+                                    Continue
+                                </button>
+                        </form>
+                    </div>
+                </div>
+            {% elif dict and book and not card_type %}
+                <div class="container-fluid bg-white text-start py-2">
+                    <h5 class="text-start mb-3"><span class="green">Step 3: 
+                    </span>Select <b>card type</b> for deck</h5>
+                    <!-- display chosen book -->
+                    <div class="container py-5">
+                        <div class="row align-items-center">
+                            <!-- Image takes 4 cols on md+, full width on mobile -->
+                            <div class="col-12 col-md-2 mb-2 mb-md-0">
+                                <img src="{{ book.cover }}" class="img-fluid rounded shadow" alt="cover image"
+                                style="width:150px; height:200px; object-fit:cover;">
+                            </div>
+                                
+                            <!-- Text takes 8 cols on md+, full width on mobile -->
+                            <div class="col-12 col-md-10">
+                                <!-- display chosen book -->
+                                <h5 class="mb-1">✅ Book chosen:</h5>
+                                <p class="mb-1"><b class="green">Title:</b> {{ book.title }}</p>
+                                <p class="mb-1"><b class="green">Author(s):</b> {{ book.authors }}</p>
+                                <p class="mb-1"> <b class="green">Lookups:</b> {{ book.num_lookups }}</p>
+                                <!-- display chosen Dictionary -->
+                                <h5 class="mb-1 mt-2">✅ Dictionary chosen:</h5>
+                                <p class="mb-1">{{ dict.name }} ({{ dict.desc | iconify_lang }})</p>
+                            </div>
+                        </div>
+                        <!--  Card Type Selection -->
+                        <h5>Select Card Type:</h5>
+                            <div class="row justify-content-start">
+                                <div class="bg-secondary-subtle rounded border-success text-startcol-lg-8 col-xl-7"> <!-- Approximately 60% on large screens -->
+                                    <form id="cardTypeSelection" method="post">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold"></label>
+                                            
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    name="card_type"
+                                                    id="card_type"
+                                                    value="A"
+                                                    required>
+                                                <input type="hidden" name="book_id" value="{{ book.id }}">
+                                                <input type="hidden" name="dict_id" value="{{ dict.id }}">
+                                                <input type="hidden" name="action" value="create_card_deck">
+                                                <label class="form-check-label" for="card_type">
+                                                    <strong class="green">Type A:</strong>
+                                                    <span class="text-muted">
+                                                        <ul>
+                                                            <li>
+                                                                <b>Front:</b> <b class="green">word</b> looked up on <i>Kindle</i> and containing <b class="green">text passage</b> from <i>Kindle</i> book
+                                                            </li>
+                                                            <li>
+                                                                <b>Back:</b> <b class="green">definitions</b> looked up at the chosen online dictionary 
+                                                            </li>
+                                                        </ul>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    name="card_type"
+                                                    id="card_type"
+                                                    value="A"
+                                                    required>
+                                                <input type="hidden" name="book_id" value="{{ book.id }}">
+                                                <input type="hidden" name="dict_id" value="{{ dict.id }}">
+                                                <input type="hidden" name="action" value="create_card_deck">
+                                                <label class="form-check-label" for="card_type">
+                                                    <strong class="green">Type B:</strong>
+                                                    <span class="text-muted">
+                                                        <ul>
+                                                            <li>
+                                                                <b>Front:</b> <b class="green">definitions</b> looked up at chosen online dictionary (with placeholders for <b class="green">word</b>)
+                                                            </li>
+                                                            <li>
+                                                                <b>Back:</b> <b class="green">word</b> looked up on <i>Kindle</i> and the containing <b class="green">text passage</b> from <i>Kindle</i> book
+                                                            </li>
+                                                        </ul>
+                                                    </span>
+                                                </label>
+                                            </div> 
+
+                                            <button id='createDeck' type="submit" class="btn btn-success">
+                                                Create Deck
+                                            </button>
+                                    </form>
+                                </div>
+                                <!-- <h5 class="text-danger">Important: Do not reload this page, even if nothing seems to happen!</h5>
+                                <p class="text-danger">Pressing <b>Create Deck</b> will start background processing that can take up to minutes for decks with a large number of cards without this page reloading. Get yourself a cup of tea and be patient ...</p> -->
+                            </div>
+                    </div>
+                </div>
+
+            {% elif card_type %}
+                <div class="container-fluid bg-white text-start py-2">
+                    <p class="text-start mb-1">Congrats! Your card deck is ready for &nbsp;<a class="btn btn-sm btn-success mb-1" href="download/decks/{{ deck_id }}">Download</a></p> 
+                    <p></p>
+                    <p>It has been created with these specs:</p>
+                    <div class="container py-5">
+                        <div class="row align-items-center">
+                            <!-- Image takes 4 cols on md+, full width on mobile -->
+                            <div class="col-12 col-md-2 mb-2 mb-md-0">
+                                <img src="{{ book.cover }}" class="img-fluid rounded shadow" alt="cover image"
+                                style="width:210px; height:280px; object-fit:cover;">
+                            </div>
+                            <!-- Text takes 8 cols on md+, full width on mobile -->
+                            <div class="col-12 col-md-10">
+                            <h5 class="mb-1">✅ Book chosen:</h5>
+                            <p class="mb-1"><b class="green">Title:</b> {{ book.title }}</p>
+                            <p class="mb-1"><b class="green">Author(s):</b> {{ book.authors }}</p>
+                            <p class="mb-1">
+                                <b class="green">Lookups:</b> {{ book.num_lookups }}
+                                <b class="green">Cards:</b> {{ cards }}
+                            </p>
+                            {% if book.num_lookups != cards %}
+                                <p class="small mt-0 mb-1">
+                                    (A number of cards smaller than the number of lookups means that some dictionary lookups did not yield results)
+                                </p>
+                            {% endif %}
+                            <h5 class="mb-1 mt-2">✅ Dictionary chosen:</h5>
+                            <p class="mb-1">{{ dict.name }} ({{ dict.desc | iconify_lang }})</p>
+                            <h5 class="mb-1 mt-2">✅ Card type chosen:</h5>
+                            <p class="mb-0">
+                                <b class="green">{{ card_type }} =></b>
+                                {{ card_type | describe_card_type }}
+                            </p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+            {% else  %}
+                <div class="container-fluid bg-white text-start py-2">
+                    <h5 class="text-start mb-3"><span class="green">Error: 
+                    </span>Something obviously went wrong ...</h5>
+                </div>
+            {% endif %}
+        {% else %}
+            <h1>Invalid Request Method: {{ request.method }}</h1>
+        {% endif %}
+{% endblock %}

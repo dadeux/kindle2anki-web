@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Change PW 
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid text-start py-3">
+        <h5 class="py-4">You can change your password here:</h5>
+    <form class="form-group"  action="/changepw" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control w-50" name="password" placeholder="Old Password" type="password">
+        </div>
+        <div class="mb-3">
+            <input class="form-control w-50" name="new_password" placeholder="New Password" type="password">
+        </div>
+        <div class="mb-3">
+            <input class="form-control w-50" name="repeated_new_password" placeholder="Repeat New Password" type="password">
+        </div>
+        <button class="btn btn-success" type="submit">Change Password</button>
+    </form>
+    </div>
+{% endblock %}

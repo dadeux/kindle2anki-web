@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Upload vocab.db 
+{% endblock %}
+
+{% block main %}
+
+
+<div class="container-fluid text-start py-3">
+{% if session['vocabdb_uploaded']  %}
+    <h3>Replace <i>vocab.db</i></h3>          
+{% else %}
+    <h3>Upload <i>vocab.db</i></h3>
+{% endif %}
+<h2></h2>
+<form id="uploadForm" method="POST" action="/upload" enctype="multipart/form-data">
+    <div class="form-group">
+        {% if session['vocabdb_uploaded']  %}
+            <p class="pb-4">You have previously uploaded a <i class="green">vocab.db</i> to this app.
+            To replace it, please choose a fresh version for upload:</p>
+        {% else %}
+            <p class="pb-4">Please choose your <i class="green">vocab.db</i> for upload (yes, must have exactly this name!):</p>
+        {% endif %}
+        <!-- <label for="file">Select your vocab.db file:</label> -->
+        <input class="upload-form" type="file" id="file_upload" name="vocab_db" accept=".db" required>
+        <button id="uploadButton" class="btn btn-success" type="submit">Upload & Process</button>
+    </div>
+</form>
+<br><br>
+<p>
+    <h5>Where to find your <i class="green">vocab.db</i> ...</h5>
+</p> 
+<ol>
+    <li>Plug in your Kindle device to your computer</li>
+    <li>Navigate to a vocabulary directory on the mounted Kindle device (hidden by default) <br>
+    To reveal hidden files and find the vocab.db on our mounted Kindle device: 
+    On Windows PC, 
+    </li>
+    <ul>
+        <li>On a <b>Mac</b>: use the keyboard shortcut <code>Command + Shift + .</code> (period) in Finder <br> 
+            Then find the file in the folder: <code>/system/vocabulary</code></li>
+        <li>On a <b>Windows</b> PC: open File Explorer, go to the View tab, and check "Hidden items" (or use Control Panel for more options)<br>
+            Then find the file in the folder: <code>\system\vocabulary</code></li>
+    </ul>
+    <li>Copy the file <i class="green">vocab.db</i> to a location on your computer, which is where you will then find it 😄</li>
+</ol>
+
+</div>
+{% endblock %}

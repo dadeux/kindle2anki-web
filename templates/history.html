@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your Transaction History
+{% endblock %}
+
+{% block main %}
+        <h4 class="py-3 text-start">Your Deck Creation History</h4>
+        {% if history %}
+            <div class="row align-items-center">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                    <p>Filter for book language: &nbsp;</p> 
+                    <select id="languageFilter" class="form-select form-select-sm w-auto mb-3">
+                        <option value="all">🌐 All</option>
+                        <option value="EN">🇬🇧 EN</option>
+                        <option value="DE">🇩🇪 DE</option>
+                        <option value="FR">🇫🇷 FR</option>
+                        <option value="ES">🇪🇸 ES</option>
+                        <option value="PT">🇵🇹 PT</option> 
+                    </select>
+                    </div> 
+                </div>
+            </div>
+            <div class="container-fluid bg-success-subtle text-center py-2 px-2">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <!-- <th class="bg-success text-white text-start align-top">DeckID</th> -->
+                        <th class="bg-success text-white text-start align-top">Author(s)</th>
+                        <th class="bg-success text-white text-start align-top">Book Title</th>
+                        <th class="bg-success text-white text-start align-top">Book Language</th>
+                        <th class="bg-success text-white text-start align-top" style="width: 350px;">Dictionary used</th>
+                        <th class="bg-success text-white text-start align-top">Cards</th>
+                        <th class="bg-success text-white text-start align-top">Timestamp</th>
+                        <th class="bg-success text-white text-start align-top">Status / Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="deckTable">
+                    {% for record in history %}
+                    <tr data-lang="{{ record.lang }}">
+                        <!-- <td class="text-start fw-bold">{{ record.deck_id }}</td> -->
+                        <td class="text-start fw-bold">{{ record.authors }}</td>
+                        <td class="text-start">{{ record.title }}</td>
+                        <td class="text-start">{{ record.lang | iconify_lang }}</td>
+                        <td class="text-start"><a href="{{ record.dict.url }}" target="_blank">{{ record.dict.name }} ( {{record.dict.desc | iconify_lang }} )</a></td>
+                        <td class="text-end">{{ record.cards }}</td>
+                        <td class="text-end">{{ record.time }}</td>
+                        {% if record.file_exists == 0 %}
+                        <td class="text-center text-success align-middle">Deleted</td>
+                        {% else %}
+                        <td class="align-middle">
+                            <a href="/download/decks/{{ record.deck_id }}">
+                                <button class="btn btn-sm btn-success" style="width: 100px;">Download</button>
+                            </a>
+                            <form action="/history" method="post">
+                                <input type="hidden" name="deck_id" value="{{ record.deck_id }}"> 
+                                <input type="hidden" name="deckname" value="{{ record.deckname }}">
+                                <button class="btn btn-sm btn-danger my-1" type="submit" style="width: 100px;">Delete</button>
+                            </form>
+                        </td>
+                        
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h6>You have't thus far created any card decks</h6>
+        {% endif %}
+        </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+# Ignore credentials file
+.env
+
+# Virtual environments
+venv/
+env/
+
+# Python bytecode cache
+*.pyc
+__pycache__/
+
+# SQLite database files
+*.sqlite3
+*.db
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# k2a test script
+explore_response.py
+
+# Flask session data
+flask_session/
+
+# book cover images
+/static/covers
+
+# user data
+/static/userdata/

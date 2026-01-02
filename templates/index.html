@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+    <div class="container-fluid bg-white text-start py-2">
+        <h5 class="py-3">Welcome {{ session['username'] }} to <span class="green">Kindle2Anki</span>, </h5>
+        <p>the place where you can create <b><a href="https://apps.ankiweb.net/" target="_blank">Anki</a> Card Decks </b> from your <a href="https://en.wikipedia.org/wiki/Amazon_Kindle" target="_blank"><b>Kindle</b></a> e-book reader's vocabulary builder (<i class="green">vocab.db</i>), leveraging Anki's superior (over vocabulary builder) spaced repetition functionality. 
+        <p>Supercharge your vocab building muscle for 5 supported languages (EN 🇬🇧, DE 🇩🇪, FR 🇫🇷, ES 🇪🇸, PT 🇵🇹) and create card decks within minutes that would take you many hours or days to create manually, harnessing the expertise of <b>quality online dictionaries</b> 
+            <!-- and <b>AI refinement</b> to take proper account of context and pinpoint pertinent word definitions and usage examples. -->
+        </p> 
+    </div>
+    <div class="container-fluid text-start py-1">
+        {% if session['vocabdb_uploaded'] or session['vocabdb_uploaded'] %}
+        <p>Looks like you have been here before and left some "personal stuff" (aka files)...<br><br>
+            That's ok, but please be advised that retention of user data is not guaranteed and may we cleared periodically if you don't delete it yourself. <br>But of course, as long as it's stored here, feel free to re-download card decks
+            {% if session['vocabdb_uploaded'] %}
+                or create new ones from your Kindle <i class="green">vocab.db</i>.<br><br>
+            {% else %}
+                .<br><br>
+            {% endif %}
+            This is why there's some handy buttons below for you to dispose of your stuff if so you choose.<br>
+            No need not worry about "loss" as you can always come back, <a href="/upload" target="_self">upload</a> a fresh copy of your Kindle <i class="green">vocab.db</i> and (re-)create decks.
+         </p>
+        <h5>Optional clean-up tasks:</h5>
+        <p>⚠️ no questions asked, instant execution!</p> 
+        <div class="tight-grid border rounded p-3 shadow-sm bg-light" style="width: 60%;">
+            <div class="row g-3 align-items-center mb-3">
+                <!-- Row 1 -->
+                <div class="col-lg-8 col-md-7 ps-4">
+                    To do a <b>thorough clean-up</b> 🧹, press here:
+                </div>
+                <div class="col-lg-4 col-md-5 pe-4">
+                    <form method="POST" action="/">
+                        <button class="btn btn-success w-100" name="action" value="clear_all" type="submit">Clear all my user data</button>
+                    </form>
+                </div>
+            </div>
+            {% if session['vocabdb_uploaded']  %}
+            <!-- Row 2 -->
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-lg-8 col-md-7 ps-4">
+                    To <b>only delete your <i class="green">vocab.db</i></b>, press here:
+                </div>
+                <div class="col-lg-4 col-md-5 pe-4">
+                    <form method="POST" action="/">
+                        <button class="btn btn-success w-100" name="action" value="clear_vocab_db" type="submit">Delete vocab.db</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if session['has_decks']  %}
+            <!-- Row 3 -->
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-lg-8 col-md-7 ps-4">
+                    To only <b>delete your {{ session['num_decks'] }} 🗂️ card decks</b>  press here:
+                </div>
+                <div class="col-lg-4 col-md-5 pe-4">
+                    <form method="POST" action="/">
+                        <button class="btn btn-success w-100" name="action" value="clear_decks" type="submit">Delete all decks</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+            <!-- row 4 -->
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-lg-8 col-md-7 ps-4">
+                    Finally <b>the "💀nuclear option"</b> 😱, press here:
+                </div>
+                <div class="col-lg-4 col-md-5 pe-4">
+                    <form method="POST" action="/">
+                        <button class="btn btn-success w-100" name="action" value="delete_account" type="submit">Delete my account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+
+        {% else %}
+            You're welcome to <a href="/upload" target="_self">upload</a> your Kindle <i class="green">vocab.db</i> and start creating card decks.<br><br>
+            Please be advised that uploaded or generated user data (vocab.db, card decks) is intended for temporary use only and will we cleared periodically if you don't delete it yourself (you'll see a some handy buttons for this once you've generated data).<br><br>
+            No need not worry about "loss" as you can always come back, <a href="/upload" target="_self">upload</a> a fresh copy of your Kindle <i class="green">vocab.db</i> and (re-)create decks. Once you do, you'll find some handy buttons here for you to dispose of your stuff if so you chose.
+            <br><br>
+            Please be advised that retention of uploaded or generated user data (vocab.db, card decks) is not guaranteed and may we cleared periodically if you don't delete it yourself (you'll see a some handy buttons for this once you've generated data).<br><br>
+            <h5>Optional clean-up tasks:</h5>
+            <p>⚠️ no questions asked, instant execution!</p> 
+            <div class="tight-grid border rounded p-3 shadow-sm bg-light" style="width: 60%;">
+                <div class="row g-3 align-items-center mb-3">
+                    <div class="col-lg-8 col-md-7 ps-4">
+                        To delete your account 😱, press here:
+                    </div>
+                    <div class="col-lg-4 col-md-5 pe-4">
+                        <form method="POST" action="/">
+                            <button class="btn btn-success w-100" name="action" value="delete_account" type="submit">Delete my account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

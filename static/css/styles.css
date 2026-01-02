@@ -1,0 +1,96 @@
+/* Size for brand */
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+.green
+{
+    color: #2e944b;
+}
+/* nav a 
+{
+    color: #f57c00;
+} */
+
+/* background for alert bar */
+.flash-bar {
+    background-color: #e8f9e9;
+    padding: 0.25rem 0.5rem;  /* overrides .alert padding */
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+    min-height: unset;
+    max-height: 6rem;
+    scrollbar-width: thin; /* for Firefox */
+    overflow-y: auto;      /* prevent overflow */
+    overflow-x: hidden;    /* recommended  */
+    scroll-behavior: smooth;
+}
+.flash-bar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.flash-bar .flashes-sm {
+    font-size: 0.85rem;       /* smaller text */
+    padding: 0.25rem 0.75rem; /* thinner height */
+    margin-bottom: 0.2rem;    /* less spacing */
+    margin-top: 0.2rem;
+}
+.flashes-sm {
+    display: flex;
+    flex-direction: column-reverse;
+}
+/* links */
+a {
+    color: #3c8454;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #bcaa96;
+    text-decoration: none;
+}
+.upload-form {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+input[type="file"] {
+            width: 300px;
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            background: white;
+    }
+
+/* selectors for table styling */
+.row-header {
+    background-color: #038542;
+    color: white;
+    font-weight: bold;
+}
+.cover-cell {
+    min-width: 150px;
+    }
+.button-cell{
+    min-width: 150px;
+}
