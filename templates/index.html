@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 
+
 {% block title %}
     Home
 {% endblock %}
@@ -102,4 +103,14 @@
             </div>
         {% endif %}
     </div>
+
+    </div>
+    {% if session['has_history'] %}
+    <div class="text-start">
+            <p class="mt-4">Enjoy using this site? If you feel it has provided value to you, please consider  
+                <a href="https://buymeacoffee.com/michael.a.may" target="_blank">
+                <img src="static/buy_me_a_coffee.png" style="width: 32px; height: 32px;" alt="buy me a coffee">Buying me a coffee 😊
+                </a>
+        </div>
+    {% endif %}
 {% endblock %}

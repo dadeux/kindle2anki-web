@@ -99,30 +99,41 @@
             {% block main %}{% endblock %}
         </main>
 
-        <footer class="mb-5">
-            <form action="https://validator.w3.org/check" class="text-center" enctype="multipart/form-data" method="post" target="_blank">
-                <input name="doctype" type="hidden" value="HTML5">
-                <input name="fragment" type="hidden">
-                <!-- https://validator.w3.org/ -->
-                <!-- <input alt="Validate" src="/static/I_heart_validator.png" type="image">  -->
-            </form>
-            <!-- <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Adapted from https://stackoverflow.com/a/10162353
-                    const html = '<!DOCTYPE ' +
-                    document.doctype.name +
-                    (document.doctype.publicId ? ' PUBLIC "' + document.doctype.publicId + '"' : '') +
-                    (!document.doctype.publicId && document.doctype.systemId ? ' SYSTEM' : '') +
-                    (document.doctype.systemId ? ' "' + document.doctype.systemId + '"' : '') +
-                    '>\n' + document.documentElement.outerHTML;
-                    document.querySelector('form[action="https://validator.w3.org/check"] > input[name="fragment"]').value = html;
-                });
-            </script> -->
-            
+        <footer class="footer pt-2 bg-light">
+            <p>© <span id="copyright"></span> by Michael May | 
+                <a href="mailto:mail4michaelmay@gmail.com">mail4michaelmay@gmail.com</a>
+            </p>
+            <ul class="socials">
+            <li>
+               <a href="https://buymeacoffee.com/michael.a.may" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Buy me a coffee 😊">
+                    <img src="static/buy_me_a_coffee.png" alt="buy me a coffee"></a>
+            </li>
+            <li>
+                <a href="https://www.linkedin.com/in/michael-may-64a27757/" target="_blank"><img
+                    src="static/images/icon-logo-linkedin.png" alt="LinkedIn"></a>
+            </li>
+            <li>
+                <a href="https://github.com/dadeux" target="_blank"><img src="static/images/icon-logo-github.ico" alt="GitHub"></a>
+            </li>
+            <li>
+                <a href="https://www.youtube.com/@MichaelMay-j1x" target="_blank"><img src="static/images/icon-logo-youtube.png"
+                    alt="YouTube"></a>
+            </li>
+            <li>
+                <a href="https://www.facebook.com/michael.may.944" target="_blank"><img src="static/images/icon-logo-facebook.png"
+                    alt="Facebook"></a>
+            </li>
+            <li>
+                <a href="https://www.instagram.com/michaelmay2903/" target="_blank"><img src="static/images/icon-logo-instagram.png"
+                    alt="Instagram"></a>
+            </li>
+            </ul> 
         </footer>
 
     </body>
         <script>
+            // Current Year for Copyright note
+            document.getElementById('copyright').textContent = new Date().getFullYear(); 
             // languageFilter
             const languageFilter = document.getElementById("languageFilter");
             if (languageFilter) {
