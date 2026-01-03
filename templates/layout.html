@@ -25,8 +25,11 @@
         <title>Kindle2Anki: {% block title %}{% endblock %}</title>
 
     </head>
-
+    {% if session['user_id'] %}
     <body>
+    {% else %}
+    <body class="logged_out">
+    {% endif %}
         <nav class="bg-light border navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/"><span><img src="/static/images/kindle2anki_75.png" alt="Kindle2Anki Image"></span>
