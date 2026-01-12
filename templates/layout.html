@@ -182,5 +182,13 @@
                     alert("upload of vocab.db will trigger background tasks (e.g. online retrieval of book covers) on the server side as soon as you close this message window by pressing <ok>.\nWhile these tasks are running this window will not reload. Depending on the number of cover images to be looked up this can take a while.\nPlease be patient and do NOT reload this page!")
                 });
             }
+            // Cookie consent
+            const registerButton = document.getElementById("registerButton")
+                if (registerButton) {
+                registerButton.addEventListener("click", function (){
+                    alert("By registering an account you consent to accepting cookies that are technically required for session handling. Kindle2anki will does not use cookies for tracking or advertising purposes.")
+                }
+                )
+            }
         </script>
 </html>
