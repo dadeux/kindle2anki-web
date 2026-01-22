@@ -22,6 +22,9 @@ import hashlib
 from datetime import datetime
 import genanki
 from textwrap import dedent
+import asyncio
+from playwright.async_api import async_playwright
+from playwright.sync_api import sync_playwright
 
 def main(): # main program
     # check command line args and deternine db and deck file
@@ -467,6 +470,27 @@ def connect(url, referer, log_level): # initiate https connection to online dict
         print(f"Successfully connected to {url}")
 
     return session
+
+def fetch_with_playwright(url):
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.goto(url)
+        content = page.content()
+        final_url = page.url
+        browser.close()
+        # print(f'fetch_with_playright - content: {content[:100]}...')  # Print first 100 characters for verification
+        return content, final_url
+
+async def async_fetch_with_playwright(url):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        await page.goto(url)
+        content = await page.content()
+        await browser.close()
+        print(f'fetch_with_playright - content: {content[:100]}...')  # Print first 100 characters for verification
+        return content
 
 def create_deck(deckname, logger): # create a card deck
     deckname = str(deckname)
