@@ -227,19 +227,6 @@ def get_books_from_vocabdb(db, vdb, logger, lang=None):
             # check if decks have been created already for this book
             book['num_decks'] = has_decks4asin(db, book['asin'])
 
-        # check for apkg file 
-        # from helpers import get_user_data_path
-        # user_dir = f"{int(user_id):06d}"
-        # for book in books:
-        #     asin = book['asin']
-        #     apkg_path = get_user_data_path(user_id) / f"{asin}.apkg"
-        #     apkg_flask_path = Path("userdata" , f'{user_dir}' , f"{asin}.apkg")
-        #     if apkg_path.exists():
-        #         book['apkg'] = apkg_flask_path
-        #         # flash(f"Found apkg for book {book['title']} at {apkg_path}", "info")
-        #     else:
-        #         book['apkg'] = None
-
     except Exception as e:
         flash(f"❌ error reading books from vocab db: {e}", "error")
         return []
@@ -269,6 +256,10 @@ def get_book_by_id(db, vdb, book_id, logger):
             flash(f"get_book_by_id: ❌ book with id {book_id} not found in vocab db", "error")
             return None
         book = result[0]
+        if not book.get('authors'):
+            book['authors'] = "unknown author"
+        if not book.get('title'):
+            book['title'] = "unknown title"
         # get number of looked up words for this book
         id = book['id']
         num_lookups = list(vdb.execute("SELECT COUNT(DISTINCT(word_key)) FROM LOOKUPS WHERE book_key = ?", id)[0].values())[0]
