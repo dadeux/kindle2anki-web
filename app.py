@@ -292,6 +292,9 @@ def create():
 
                 # flash(f"calling func {func} with deck_request {deck_request}", "info"  )
                 book, cards, deck_id = func(db, vdb, deck_request, logger)
+                if not book:
+                    flash(f"Looks like no cards could be created for book - likely the dictionary site blocked out requests", "error")
+                    return redirect(request.url)
                 dicts = get_dictionaries(book['lang'])
                 dict = next((d for d in dicts if d['id'] == int(deck_request['dict_id'])), None)
                 session['has_history'] = has_history(db)
