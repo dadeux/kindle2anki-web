@@ -26,7 +26,6 @@ from requests.adapters import HTTPAdapter
 from requests.exceptions import RetryError
 from kindle2anki import *
 import genanki
-from sendmail import send_email
 
 def get_user_data_path(user_id: int | str) -> Path:
     user_dir = f"{int(user_id):06d}"
