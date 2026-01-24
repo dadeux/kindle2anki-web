@@ -14,6 +14,7 @@ from email_validator import validate_email, EmailNotValidError
 from get_bookcover import *
 from helpers import *
 from db_helpers import *
+from sendmail import send_email
 
 # Configure application
 app = Flask(__name__)
@@ -93,7 +94,7 @@ def register():
                 session["email"] = email_normalized
                 flash(
                     f"Sucessfully created account. You are now logged in as user {username}({email_normalized})", "success")
-                # return render_template("index.html")
+                send_email("michael@lingrify.com", "New user registration", f'A new user {session["username"]} ({session["email"]}) has registered.', "kindle2anki@lingrify.com", "kindle2anki@lingrify.com")
                 return redirect("/")
             else:
                 # return render_template("register.html")
@@ -301,6 +302,7 @@ def create():
                 dict = next((d for d in dicts if d['id'] == int(deck_request['dict_id'])), None)
                 session['has_history'] = has_history(db)
                 flash(f"✅ Successfully created deck for book {book['title']}", "success")
+                send_email("michael@lingrify.com", "Deck created", f'A new deck has been created by user {session["username"]} ({session["email"]}) for book {book["title"]} ({book["asin"]})', "kindle2anki@lingrify.com", "kindle2anki@lingrify.com")
                 return render_template("create.html", card_type = deck_request["card_type"], book=book, dict=dict, cards=cards, deck_id=deck_id)
             else:
                 pass
